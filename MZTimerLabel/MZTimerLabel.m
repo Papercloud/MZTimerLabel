@@ -379,7 +379,15 @@
                     self.timeLabel.text = labelText;
                 }
             } else {
-                self.timeLabel.text = [self.dateFormatter stringFromDate:timeToShow];
+                //Time is always returns as a time post 1970 so it can never be 0, this is a temporary fix.
+                //Library will have to be ripped out in the future to replace it with one that handles dates
+                //Possibly using calendar
+                NSString *strDate = [self.dateFormatter stringFromDate:timeToShow];
+                
+                NSString *modifiedDay = [NSString stringWithFormat:@"%i",[[strDate substringToIndex:2] intValue] - 1];
+                
+                if(![modifiedDay isEqualToString:@"-1"])self.timeLabel.text = [modifiedDay stringByAppendingString:[strDate substringFromIndex:2]];
+                else self.timeLabel.text = strDate;
             }
         }
     }
